@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { API_URL } from '../env';
+import { environment } from '../env';
 import { Country } from './country.model';
 
 @Injectable()
@@ -18,7 +18,7 @@ export class CountriesApiService {
   // GET list of public, future events
   getCountries(): Observable<Country[]> {
     return this.http
-      .get<Country[]>(`${API_URL}/countries`)
+      .get<Country[]>(`${environment.API_URL}/countries`)
       .pipe(
         catchError(CountriesApiService._handleError)
       );
