@@ -3,7 +3,7 @@ services:
 
   angular_app:
     build: .
-    command: 'npm start'
+    command: 'npm start --configuration=development'
     ports:
       - '4200:4200' 
       - '49153:49153'
