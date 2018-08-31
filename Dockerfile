@@ -20,6 +20,6 @@ ENV CHROME_BIN=/usr/bin/google-chrome
 # install and cache app dependencies
 COPY package.json package.json
 RUN npm install -g @angular/cli@6.1.5
-RUN yarn install
+RUN npm install
 
 COPY . .
