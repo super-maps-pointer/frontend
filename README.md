@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.com/super-maps-pointer/frontend.svg?branch=master)](https://travis-ci.com/super-maps-pointer/frontend)
+[![Maintainability](https://api.codeclimate.com/v1/badges/1013659b3cd23514d008/maintainability)](https://codeclimate.com/github/super-maps-pointer/frontend/maintainability)
+
 # FRONTEND of SUPER MAPS POINTER
 
 Super maps pointer is yet another game intended to upgrade your geography skills :earth_africa: while having fun! :smile:
