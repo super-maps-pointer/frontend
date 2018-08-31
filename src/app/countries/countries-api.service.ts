@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { Country } from './country.model';
+import { throwError } from 'rxjs';
 
 @Injectable()
 export class CountriesApiService {
@@ -12,7 +13,7 @@ export class CountriesApiService {
   }
 
   private static _handleError(err: HttpErrorResponse | any) {
-    return Observable.throw(err.message || 'Error: Unable to complete request.');
+    return throwError(err.message || 'Error: Unable to complete request.');
   }
 
   // GET list of public, future events
