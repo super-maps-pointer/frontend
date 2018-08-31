@@ -77,4 +77,8 @@ A debugger called: `Launch Chrome against localhost` is set up with **VS Code**,
 
 ## Unit Tests
 
-Soon
+Done using `karma`
+
+```zsh
+docker-compose -f ./docker-compose.test.yml run --rm karma
+```
