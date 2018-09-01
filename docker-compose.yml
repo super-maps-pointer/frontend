@@ -2,6 +2,7 @@ version: '3.7'
 services:
 
   angular_app:
+    container_name: angular
     build: .
     command: 'ng serve --host 0.0.0.0 --poll=500'
     ports:

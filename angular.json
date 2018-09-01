@@ -23,8 +23,14 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/assets/sass/styles.scss"
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "node_modules/foundation-sites/scss",
+                "src/assets/sass"
+              ]
+            },
             "scripts": []
           },
           "configurations": {
@@ -72,8 +78,14 @@
             "tsConfig": "src/tsconfig.spec.json",
             "karmaConfig": "src/karma.conf.js",
             "styles": [
-              "src/styles.scss"
+              "src/assets/sass/styles.scss"
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "node_modules/foundation-sites/scss",
+                "src/assets/sass"
+              ]
+            },
             "scripts": [],
             "assets": [
               "src/favicon.ico",
