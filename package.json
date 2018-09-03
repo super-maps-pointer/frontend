@@ -24,10 +24,13 @@
     "@angular/router": "^6.1.6",
     "core-js": "^2.5.4",
     "express": "^4.16.3",
+    "foundation-sites": "^6.5.0-rc.2",
     "hoek": "^5.0.4",
+    "jquery": "^3.3.1",
     "path": "^0.12.7",
     "rxjs": "^6.3.0",
     "typescript": "^2.9.2",
+    "what-input": "^5.1.1",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {
