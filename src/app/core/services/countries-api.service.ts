@@ -2,15 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { Country } from './country.model';
 import { throwError } from 'rxjs';
 
 @Injectable()
 export class CountriesApiService {
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) { }
 
   private static _handleError(err: HttpErrorResponse | any) {
     return throwError(err.message || 'Error: Unable to complete request.');
