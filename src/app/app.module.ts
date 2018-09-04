@@ -3,8 +3,7 @@ import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
-import { CountriesApiService } from './countries/countries-api.service';
-
+import { CoreModule } from './core/core.module';
 @NgModule({
   declarations: [
     AppComponent
@@ -12,8 +11,8 @@ import { CountriesApiService } from './countries/countries-api.service';
   imports: [
     BrowserModule,
     HttpClientModule,
+    CoreModule
   ],
-  providers: [CountriesApiService],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
