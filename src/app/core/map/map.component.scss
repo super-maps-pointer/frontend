@@ -1,3 +1,5 @@
+@import 'settings';
+
 :host ::ng-deep {
     
     svg {
@@ -6,13 +8,13 @@
 
     path {
         fill: none;
-        stroke: black;
+        stroke: white;
     }
 
     .background {
-    fill: rgba(200,212,220,.5);
-    stroke-width: .8px;
-    stroke: black;
+        fill: rgba(200,212,220,.5);
+        stroke-width: .8px;
+        stroke: black;
     }
 
     .graticule {
@@ -22,26 +24,12 @@
 
     .country {
         cursor: pointer;
-        fill: whitesmoke;
-    }
-
-    .country .land, .state {
-        fill: white;
-        stroke: rgba(0,0,0, .2);
-        stroke-width: .3px;
+        fill: $medium-gray;
+        opacity: 0.6;
     }
 
     .clicked {
         fill: green;
+        opacity: 1;
     }
-
-    // .state .overlay {
-    //     fill: blue;
-    //     fill-opacity: 0;
-    // }
-
-    // .country .overlay {
-    //     fill: orange;
-    //     fill-opacity: 0;
-    // }
 }

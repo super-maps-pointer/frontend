@@ -100,6 +100,12 @@ export class MapComponent implements OnInit {
       .enter()
       .append('path')
       .attr('class', 'geo country')
+      .on('mouseover', (d, i, nodes) => {
+        d3.select(nodes[i]).style('opacity', 1);
+      })
+      .on('mouseout', function(d, i, nodes) {
+        d3.select(nodes[i]).style('opacity', 0.6);
+      })
       .on('click', (d, id, nodes) => {
         d3.select('.info').html(d.properties.name + ': ' + d.properties.pop);
 
