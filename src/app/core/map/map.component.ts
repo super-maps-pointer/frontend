@@ -15,6 +15,8 @@ export class MapComponent implements OnInit {
   projection;
   path;
   svg;
+  isFound = false;
+  initFirst = true;
 
   ngOnInit() {
     const mapJson = '../../assets/json/countries.json';
@@ -64,7 +66,7 @@ export class MapComponent implements OnInit {
   }
 
   /**
-   * Generate the svg object, defined with width and height from this class
+   * Generate the svg object, defined with width and height
    */
   private getSvg() {
     return d3.select('.globe')
@@ -92,22 +94,42 @@ export class MapComponent implements OnInit {
     }
   }
 
+  /**
+   * Display all the country and allow different binding.
+   * NOTE: This is one of the core function of this component
+   * @param world geojson file containing all the coordinates and the information for the countries
+   */
   private drawCountries(world) {
     const countries = feature(world, world.objects.countries).features;
+    let countryNameList, randomCountry;
+
+    // refacto this with quizz component
+    if (this.initFirst) {
+      countryNameList = countries.map(country => country.properties.name);
+      randomCountry = countryNameList[Math.floor(Math.random() * countryNameList.length)];
+
+      d3.select('.quizz').html('Where is ' + randomCountry + '?');
+      this.initFirst = false;
+    }
+
 
     this.svg.selectAll('.country')
       .data(countries)
       .enter()
       .append('path')
       .attr('class', 'geo country')
-      .on('mouseover', (d, i, nodes) => {
-        d3.select(nodes[i]).style('opacity', 1);
+      .on('mouseover', (d, id, nodes) => {
+        d3.select(nodes[id]).style('opacity', 1);
       })
-      .on('mouseout', function(d, i, nodes) {
-        d3.select(nodes[i]).style('opacity', 0.6);
+      .on('mouseout', (d, id, nodes) => {
+        d3.select(nodes[id]).style('opacity', 0.6);
       })
       .on('click', (d, id, nodes) => {
         d3.select('.info').html(d.properties.name + ': ' + d.properties.pop);
+
+        if (d.properties.name === randomCountry) {
+          d3.select('.quizz').html('Bravo :)');
+        }
 
         this.rotateToFocusOn(d);
         this.applyCssOnClick(id, nodes);
