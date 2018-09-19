@@ -12,7 +12,7 @@
     }
 
     .background {
-        fill: rgba(200,212,220,.5);
+        fill: rgb(240, 240, 240);
         stroke-width: .8px;
         stroke: black;
     }
@@ -29,7 +29,7 @@
     }
 
     .clicked {
-        fill: green;
+        fill: coral;
         opacity: 1;
     }
 }
