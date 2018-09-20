@@ -1,0 +1,39 @@
+@import 'settings';
+
+:host ::ng-deep {
+    
+    svg {
+        width: 100%;
+    }
+
+    path {
+        fill: none;
+        stroke: white;
+    }
+
+    .background {
+        fill: rgb(240, 240, 240);
+        stroke-width: .8px;
+        stroke: black;
+    }
+
+    .graticule {
+        stroke: rgba(0,0,0, .2);
+        stroke-width: .5px;
+    }
+
+    .country {
+        cursor: pointer;
+        fill: $medium-gray;
+        opacity: 0.6;
+    }
+
+    .clicked {
+        fill: coral;
+        opacity: 1;
+    }
+
+    .hover {
+        opacity: 1;
+    }
+}
