@@ -1,5 +1,33 @@
 <app-map (countryEvent)="receiveCountry($event)"></app-map>
-<div>
-  <p>Where is {{ countryToGuess }}?</p>
-  <p>selected country is {{ selectedCountry }}</p>
+
+<div *ngIf="game.isRunning; else endGame">
+
+  <div *ngIf="!game.isPaused; else waitForNext">
+    <p>Question n° {{ game.currentQuestion }} of {{ game.totalQuestion }}</p>
+    <p>Score: {{ game.score }}</p>
+    <br>
+    <p *ngIf="countryToGuess">Where is {{ countryToGuess }}?</p>
+  </div>
+
+  <ng-template #waitForNext>
+
+    <div *ngIf="goodAnswer; else badAnswer" class="callout success">
+        <p>Good answer!</p>
+    </div>
+    <ng-template #badAnswer>
+      <div class="callout alert">
+        <p>Wrong answer.</p>
+      </div>
+    </ng-template>
+
+    <p *ngIf="selectedCountry">You selected {{ selectedCountry }}</p>
+
+    <button (click)="nextQuestion()" class="button small">Next ></button>
+
+  </ng-template>
+
 </div>
+
+<ng-template #endGame>
+  <p>Your final score is {{ game.score }}</p>
+</ng-template>

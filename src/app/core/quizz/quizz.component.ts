@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import * as d3 from 'd3';
 import { feature } from 'topojson';
+import { Game } from './game.model';
 
 @Component({
   selector: 'app-quizz',
@@ -11,6 +12,8 @@ import { feature } from 'topojson';
 export class QuizzComponent implements OnInit {
   countryNameList: string[];
   countryToGuess: string;
+  goodAnswer: boolean;
+  game = new Game(5, 1, 0, true, false);
 
   selectedCountry: string;
 
@@ -34,19 +37,43 @@ export class QuizzComponent implements OnInit {
    */
   public receiveCountry($event): void {
     this.selectedCountry = $event;
-    this.validation();
+    this.gameCycle();
   }
 
-  private validation(): void {
-    if (this.countryToGuess === this.selectedCountry) {
-      console.log('you win');
-      this.countryToGuess = this.pickRandomCountry();
+  public nextQuestion(): void {
+    this.game.isPaused = false;
+  }
+
+  private gameCycle(): void {
+
+    this.goodAnswer = this.countryToGuess === this.selectedCountry;
+
+    if (this.goodAnswer) {
+     this.game.score += 1;
+    }
+
+    this.countryToGuess = this.pickRandomCountry();
+    this.game.currentQuestion += 1;
+
+    // End of game if no more questions otherwise game is paused
+    if (this.game.currentQuestion > this.game.totalQuestion) {
+      this.game.isRunning = false;
     } else {
-      console.log('you lose');
+      this.game.isPaused = true;
     }
   }
 
+  /**
+   * Pick a random country and delete it from the list
+   */
   private pickRandomCountry(): string {
-    return this.countryNameList[Math.floor(Math.random() * this.countryNameList.length)];
+    const rdmCountry = this.countryNameList[Math.floor(Math.random() * this.countryNameList.length)];
+
+    const index = this.countryNameList.indexOf(rdmCountry, 0);
+    if (index > -1) {
+      this.countryNameList.splice(index, 1);
+    }
+
+    return rdmCountry;
   }
 }
