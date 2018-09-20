@@ -4,8 +4,10 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { CountriesComponent } from './countries/countries.component';
 import { MapComponent } from './map/map.component';
-import { CountriesApiService } from './services/countries-api.service';
 import { HeaderComponent } from './header/header.component';
+import { QuizzComponent } from './quizz/quizz.component';
+import { CountriesApiService } from './services/countries-api.service';
+
 
 @NgModule({
     imports: [
@@ -15,12 +17,14 @@ import { HeaderComponent } from './header/header.component';
     declarations: [
         CountriesComponent,
         HeaderComponent,
-        MapComponent
+        MapComponent,
+        QuizzComponent
     ],
     exports: [
         CountriesComponent,
         HeaderComponent,
-        MapComponent
+        MapComponent,
+        QuizzComponent
     ],
     providers: [
         CountriesApiService,

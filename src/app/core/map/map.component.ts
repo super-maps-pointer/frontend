@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 
 import * as d3 from 'd3';
 import { feature } from 'topojson';
@@ -15,8 +15,8 @@ export class MapComponent implements OnInit {
   projection;
   path;
   svg;
-  isFound = false;
-  initFirst = true;
+
+  @Output() countryEvent = new EventEmitter<string>();
 
   ngOnInit() {
     const mapJson = '../../assets/json/countries.json';
@@ -101,17 +101,6 @@ export class MapComponent implements OnInit {
    */
   private drawCountries(world) {
     const countries = feature(world, world.objects.countries).features;
-    let countryNameList, randomCountry;
-
-    // refacto this with quizz component
-    if (this.initFirst) {
-      countryNameList = countries.map(country => country.properties.name);
-      randomCountry = countryNameList[Math.floor(Math.random() * countryNameList.length)];
-
-      d3.select('.quizz').html('Where is ' + randomCountry + '?');
-      this.initFirst = false;
-    }
-
 
     this.svg.selectAll('.country')
       .data(countries)
@@ -119,17 +108,16 @@ export class MapComponent implements OnInit {
       .append('path')
       .attr('class', 'geo country')
       .on('mouseover', (d, id, nodes) => {
-        d3.select(nodes[id]).style('opacity', 1);
+        d3.select(nodes[id]).classed('hover', true);
       })
       .on('mouseout', (d, id, nodes) => {
-        d3.select(nodes[id]).style('opacity', 0.6);
+        d3.select(nodes[id]).classed('hover', false);
       })
       .on('click', (d, id, nodes) => {
         d3.select('.info').html(d.properties.name + ': ' + d.properties.pop);
 
-        if (d.properties.name === randomCountry) {
-          d3.select('.quizz').html('Bravo :)');
-        }
+        // Send country to quizz
+        this.countryEvent.emit(d.properties.name);
 
         this.rotateToFocusOn(d);
         this.applyCssOnClick(id, nodes);
