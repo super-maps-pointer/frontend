@@ -1,6 +1,10 @@
 @import 'settings';
 
 :host ::ng-deep {
+
+    .truc {
+        fill: orange;
+    }
     
     svg {
         width: 100%;

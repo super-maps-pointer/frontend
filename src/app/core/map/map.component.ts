@@ -1,4 +1,6 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+
+import { ButtonNextService } from '../services/button-next.service';
 
 import * as d3 from 'd3';
 import { feature } from 'topojson';
@@ -18,7 +20,20 @@ export class MapComponent implements OnInit {
 
   @Output() countryEvent = new EventEmitter<string>();
 
+  constructor(private buttonNextService: ButtonNextService) {
+    buttonNextService.triggered$.subscribe(selectedCountry => {
+        d3.select('svg').remove();
+        this.generateNewMap(selectedCountry);
+      },
+      console.error
+    );
+  }
+
   ngOnInit() {
+    this.generateNewMap(null);
+  }
+
+  public generateNewMap(selectedCountry): void {
     const mapJson = '../../assets/json/countries.json';
 
     this.projection = this.getProjection();
@@ -130,15 +145,8 @@ export class MapComponent implements OnInit {
    * @param nodes Array of Object Country generate by d3.json defined by mapJson
    */
   private applyCssOnClick(id, nodes) {
-    for (let i = 0; i < nodes.length; i++) {
-      if (i === id) {
-        d3.select(nodes[i])
-        .attr('class', 'geo country clicked');
-      } else {
-        d3.select(nodes[i])
-          .attr('class', 'geo country');
-      }
-    }
+    d3.selectAll(nodes).classed('clicked', false);
+    d3.select(nodes[id]).classed('clicked', true);
   }
 
   /**

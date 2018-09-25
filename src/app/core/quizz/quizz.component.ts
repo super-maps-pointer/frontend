@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
+
+import { ButtonNextService } from '../services/button-next.service';
 
 import * as d3 from 'd3';
 import { feature } from 'topojson';
@@ -16,6 +18,8 @@ export class QuizzComponent implements OnInit {
   game = new Game(5, 1, 0, true, false);
 
   selectedCountry: string;
+
+  constructor(private buttonNextService: ButtonNextService) { }
 
   ngOnInit(): void {
     const mapJson = '../../assets/json/countries.json';
@@ -41,6 +45,7 @@ export class QuizzComponent implements OnInit {
   }
 
   public nextQuestion(): void {
+    this.buttonNextService.trigger(this.selectedCountry);
     this.game.isPaused = false;
   }
 

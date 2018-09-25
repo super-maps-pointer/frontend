@@ -6,6 +6,7 @@ import { MapComponent } from './map/map.component';
 import { HeaderComponent } from './header/header.component';
 import { QuizzComponent } from './quizz/quizz.component';
 import { CountriesApiService } from './services/countries-api.service';
+import { ButtonNextService } from './services/button-next.service';
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import { CountriesApiService } from './services/countries-api.service';
     ],
     providers: [
         CountriesApiService,
+        ButtonNextService,
     ]
 })
 export class CoreModule { }
