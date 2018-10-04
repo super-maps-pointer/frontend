@@ -2,10 +2,6 @@
 
 :host ::ng-deep {
 
-    .truc {
-        fill: orange;
-    }
-    
     svg {
         width: 100%;
     }
@@ -34,6 +30,11 @@
 
     .clicked {
         fill: coral;
+        opacity: 1;
+    }
+
+    .good {
+        fill: green;
         opacity: 1;
     }
 

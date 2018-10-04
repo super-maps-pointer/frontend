@@ -1,6 +1,7 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 
-import { ButtonNextService } from '../services/button-next.service';
+import { QuizzService } from '../services/quizz.service';
 
 import * as d3 from 'd3';
 import { feature } from 'topojson';
@@ -11,34 +12,53 @@ import d3GeoZoom from 'd3-geo-zoom';
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss']
 })
-export class MapComponent implements OnInit {
-  width = 500;
-  height = 500;
-  projection;
-  path;
-  svg;
+export class MapComponent implements OnDestroy {
+  readonly width: number = 500;
+  readonly height: number = 500;
+
+  // d3 Object and function needed to generate the map
+  projection: any;
+  path: any;
+  svg: any;
+
+  quizzSub: Subscription;
+  countryToGuess: string;
+  isClicked: boolean;
 
   @Output() countryEvent = new EventEmitter<string>();
 
-  constructor(private buttonNextService: ButtonNextService) {
-    buttonNextService.triggered$.subscribe(selectedCountry => {
-        d3.select('svg').remove();
-        this.generateNewMap(selectedCountry);
-      },
+  constructor(private quizzService: QuizzService) {
+    this.quizzSub = this.quizzService.triggered$.subscribe(countryToGuess => {
+      this.countryToGuess = countryToGuess;
+      d3.select('svg').remove();
+      this.generateNewMap();
+    },
       console.error
     );
   }
 
-  ngOnInit() {
-    this.generateNewMap(null);
+  ngOnDestroy(): void {
+    if (this.quizzSub) {
+      this.quizzSub.unsubscribe();
+    }
   }
 
-  public generateNewMap(selectedCountry): void {
+  /**
+   * Generate all the map in this order:
+   *  - create the projection, the svg etc...
+   *  - Enable zoom and render
+   *  - load the geojson map
+   *  - Generate the map without the countries
+   *  - Draw countries and bind user interactions
+   *  - Render all on screen
+   */
+  public generateNewMap(): void {
     const mapJson = '../../assets/json/countries.json';
 
     this.projection = this.getProjection();
     this.path = d3.geoPath(this.projection);
     this.svg = this.getSvg();
+    this.isClicked = false;
 
     // Enable drag and zoom
     d3GeoZoom()
@@ -62,7 +82,7 @@ export class MapComponent implements OnInit {
   /**
    * Render or re-render the map.
    */
-  private render() {
+  private render(): void {
     this.svg.selectAll('path.geo').attr('d', this.path);
   }
 
@@ -83,7 +103,7 @@ export class MapComponent implements OnInit {
   /**
    * Generate the svg object, defined with width and height
    */
-  private getSvg() {
+  private getSvg(): Selection {
     return d3.select('.globe')
       .append('svg')
       .attr('width', this.width)
@@ -95,7 +115,7 @@ export class MapComponent implements OnInit {
    * Generate the map as expected and add graticule (lines around the world) if needed
    * @param mapType String: It will adapt according to the projection
    */
-  private generateMap(mapType, withGraticule = true) {
+  private generateMap(mapType, withGraticule = true): void {
     this.svg.append('path')
       .attr('class', 'geo background')
       .datum({type: mapType});
@@ -114,7 +134,7 @@ export class MapComponent implements OnInit {
    * NOTE: This is one of the core function of this component
    * @param world geojson file containing all the coordinates and the information for the countries
    */
-  private drawCountries(world) {
+  private drawCountries(world): void {
     const countries = feature(world, world.objects.countries).features;
 
     this.svg.selectAll('.country')
@@ -131,29 +151,50 @@ export class MapComponent implements OnInit {
       .on('click', (d, id, nodes) => {
         d3.select('.info').html(d.properties.name + ': ' + d.properties.pop);
 
-        // Send country to quizz
-        this.countryEvent.emit(d.properties.name);
+        if (!this.isClicked) {
+          this.applyCssOnClick(id, nodes, 'clicked');
 
-        this.rotateToFocusOn(d);
-        this.applyCssOnClick(id, nodes);
+          if (this.countryToGuess) {
+            this.HighLighCountyToGuess(nodes);
+          }
+
+          // Send country to quizz
+          this.countryEvent.emit(d.properties.name);
+        }
+        this.isClicked = true;
       });
   }
 
   /**
-   * Add class 'clicked' zhen clicking a country on the map (to apply css)
-   * @param id Integer of the selected country
+   * Apply css and rotate to country to guess
    * @param nodes Array of Object Country generate by d3.json defined by mapJson
    */
-  private applyCssOnClick(id, nodes) {
-    d3.selectAll(nodes).classed('clicked', false);
-    d3.select(nodes[id]).classed('clicked', true);
+  private HighLighCountyToGuess(nodes): void {
+    for (let i = 0; i < nodes.length; i++) {
+      if (nodes[i].__data__.properties.name === this.countryToGuess) {
+        this.applyCssOnClick(i, nodes, 'good');
+        this.rotateToFocusOn(nodes[i].__data__);
+        break;
+      }
+    }
+  }
+
+  /**
+   * Add class 'className' when clicking a country on the map (to apply css)
+   * @param id Integer of the selected country
+   * @param nodes Array of Object Country generate by d3.json defined by mapJson
+   * @param className String, name of the class to be apply
+   */
+  private applyCssOnClick(id, nodes, className: string): void {
+    d3.selectAll(nodes).classed(className, false);
+    d3.select(nodes[id]).classed(className, true);
   }
 
   /**
    * Rotate the map to center the country clicked by the user.
    * @param x selected Country Object
    */
-  private rotateToFocusOn(x) {
+  private rotateToFocusOn(x): void {
     let coords;
     coords = d3.geoCentroid(x);
     coords[0] = -coords[0];

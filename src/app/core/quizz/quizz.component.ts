@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
 
-import { ButtonNextService } from '../services/button-next.service';
+import { QuizzService } from '../services/quizz.service';
 
 import * as d3 from 'd3';
 import { feature } from 'topojson';
@@ -19,7 +19,7 @@ export class QuizzComponent implements OnInit {
 
   selectedCountry: string;
 
-  constructor(private buttonNextService: ButtonNextService) { }
+  constructor(private quizzService: QuizzService) { }
 
   ngOnInit(): void {
     const mapJson = '../../assets/json/countries.json';
@@ -30,12 +30,13 @@ export class QuizzComponent implements OnInit {
         this.countryNameList = topoCountries.map(c => c.properties.name);
 
         this.countryToGuess = this.pickRandomCountry();
+        this.quizzService.trigger(this.countryToGuess);
       });
   }
 
   /**
    * Event binded to MapComponent.
-   * It will the name of the selected (on click) country.
+   * It will send the name of the selected (on click) country.
    * Then it will trigger the validation
    * @param $event
    */
@@ -44,13 +45,20 @@ export class QuizzComponent implements OnInit {
     this.gameCycle();
   }
 
+  /**
+   * Triggered onClick 'next button'
+   * Reactivate a game cycle and
+   * Send the selected coutry to all subscribers
+   */
   public nextQuestion(): void {
-    this.buttonNextService.trigger(this.selectedCountry);
+    this.quizzService.trigger(this.countryToGuess);
     this.game.isPaused = false;
   }
 
+  /**
+   * Handle all the event of the game
+   */
   private gameCycle(): void {
-
     this.goodAnswer = this.countryToGuess === this.selectedCountry;
 
     if (this.goodAnswer) {

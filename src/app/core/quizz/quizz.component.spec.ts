@@ -1,6 +1,8 @@
 import { TestBed, ComponentFixture, async } from '@angular/core/testing';
 import { QuizzComponent } from './quizz.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { QuizzService } from '../services/quizz.service';
+import { MapComponent } from '../map/map.component';
 
 describe('QuizzComponent', () => {
 
@@ -10,11 +12,15 @@ describe('QuizzComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        HttpClientTestingModule
+        HttpClientTestingModule,
       ],
       declarations: [
-        QuizzComponent
-      ]
+        QuizzComponent,
+        MapComponent,
+      ],
+      providers: [
+        QuizzService,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(QuizzComponent);
@@ -22,9 +28,8 @@ describe('QuizzComponent', () => {
     fixture.detectChanges();
   }));
 
-  // TODO
-  // it('should render title in a h1 tag', async(() => {
-  //   const compiled = fixture.debugElement.nativeElement;
-  //   expect(compiled.querySelector('h1').textContent).toContain('Super Maps Pointer');
-  // }));
+  it('should have score init to zero', async(() => {
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('.score').textContent).toContain('Score');
+  }));
 });

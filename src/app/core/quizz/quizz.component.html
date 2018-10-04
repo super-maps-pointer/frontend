@@ -4,7 +4,7 @@
 
   <div *ngIf="!game.isPaused; else waitForNext">
     <p>Question n° {{ game.currentQuestion }} of {{ game.totalQuestion }}</p>
-    <p>Score: {{ game.score }}</p>
+    <p class="score">Score: {{ game.score }}</p>
     <br>
     <p *ngIf="countryToGuess">Where is {{ countryToGuess }}?</p>
   </div>
