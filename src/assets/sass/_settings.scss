@@ -294,11 +294,16 @@ $button-sizes: (
   default: 0.9rem,
   large: 1.25rem,
 );
-$button-palette: $foundation-palette;
+// $button-palette: $foundation-palette;
 $button-opacity-disabled: 0.25;
 $button-background-hover-lightness: -20%;
 $button-hollow-hover-lightness: -50%;
 $button-transition: background-color 0.25s ease-out, color 0.25s ease-out;
+
+// custom color
+$button-palette: map-merge($foundation-palette, (
+    coral: coral
+)) !default;
 
 // 12. Button Group
 // ----------------
