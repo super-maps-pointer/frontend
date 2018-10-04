@@ -14,6 +14,7 @@ import { Game } from './game.model';
 export class QuizzComponent implements OnInit {
   countryNameList: string[];
   countryToGuess: string;
+  prevCountryToGuess: string;
   goodAnswer: boolean;
   game = new Game(5, 1, 0, true, false);
 
@@ -60,6 +61,7 @@ export class QuizzComponent implements OnInit {
    */
   private gameCycle(): void {
     this.goodAnswer = this.countryToGuess === this.selectedCountry;
+    this.prevCountryToGuess = this.countryToGuess;
 
     if (this.goodAnswer) {
      this.game.score += 1;

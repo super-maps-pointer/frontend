@@ -16,8 +16,9 @@
     </div>
     <ng-template #badAnswer>
       <div class="callout alert">
-        <p>Wrong answer.</p>
+        <p>Wrong answer</p>
       </div>
+      <p>Good anwser was {{ prevCountryToGuess }}</p>
     </ng-template>
 
     <p *ngIf="selectedCountry">You selected {{ selectedCountry }}</p>
@@ -29,5 +30,7 @@
 </div>
 
 <ng-template #endGame>
-  <p>Your final score is {{ game.score }}</p>
+  <div>
+    <p>Your final score is <strong>{{ game.score }}</strong> out of {{ game.totalQuestion }}</p>
+  </div>
 </ng-template>
