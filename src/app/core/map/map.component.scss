@@ -1,7 +1,7 @@
 @import 'settings';
 
 :host ::ng-deep {
-    
+
     svg {
         width: 100%;
     }
@@ -30,6 +30,11 @@
 
     .clicked {
         fill: coral;
+        opacity: 1;
+    }
+
+    .good {
+        fill: green;
         opacity: 1;
     }
 

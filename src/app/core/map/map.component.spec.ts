@@ -2,6 +2,7 @@ import { TestBed, ComponentFixture, async } from '@angular/core/testing';
 
 import { MapComponent } from './map.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { QuizzService } from '../services/quizz.service';
 
 describe('MapCompenent', () => {
 
@@ -16,6 +17,9 @@ describe('MapCompenent', () => {
       declarations: [
         MapComponent
       ],
+      providers: [
+        QuizzService
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(MapComponent);
@@ -23,8 +27,9 @@ describe('MapCompenent', () => {
     fixture.detectChanges();
   }));
 
-  it('should render a map', async(() => {
+  it('should render a map after generation', async(() => {
     const compiled = fixture.debugElement.nativeElement;
+    component.generateNewMap();
     expect(compiled.querySelector('svg')).not.toBe(null);
   }));
 });

@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
+
+import { QuizzService } from '../services/quizz.service';
 
 import * as d3 from 'd3';
 import { feature } from 'topojson';
+import { Game } from './game.model';
 
 @Component({
   selector: 'app-quizz',
@@ -11,8 +14,13 @@ import { feature } from 'topojson';
 export class QuizzComponent implements OnInit {
   countryNameList: string[];
   countryToGuess: string;
+  prevCountryToGuess: string;
+  goodAnswer: boolean;
+  game = new Game(5, 1, 0, true, false);
 
   selectedCountry: string;
+
+  constructor(private quizzService: QuizzService) { }
 
   ngOnInit(): void {
     const mapJson = '../../assets/json/countries.json';
@@ -23,30 +31,64 @@ export class QuizzComponent implements OnInit {
         this.countryNameList = topoCountries.map(c => c.properties.name);
 
         this.countryToGuess = this.pickRandomCountry();
+        this.quizzService.trigger(this.countryToGuess);
       });
   }
 
   /**
    * Event binded to MapComponent.
-   * It will the name of the selected (on click) country.
+   * It will send the name of the selected (on click) country.
    * Then it will trigger the validation
    * @param $event
    */
   public receiveCountry($event): void {
     this.selectedCountry = $event;
-    this.validation();
+    this.gameCycle();
   }
 
-  private validation(): void {
-    if (this.countryToGuess === this.selectedCountry) {
-      console.log('you win');
-      this.countryToGuess = this.pickRandomCountry();
+  /**
+   * Triggered onClick 'next button'
+   * Reactivate a game cycle and
+   * Send the selected coutry to all subscribers
+   */
+  public nextQuestion(): void {
+    this.quizzService.trigger(this.countryToGuess);
+    this.game.isPaused = false;
+  }
+
+  /**
+   * Handle all the event of the game
+   */
+  private gameCycle(): void {
+    this.goodAnswer = this.countryToGuess === this.selectedCountry;
+    this.prevCountryToGuess = this.countryToGuess;
+
+    if (this.goodAnswer) {
+     this.game.score += 1;
+    }
+
+    this.countryToGuess = this.pickRandomCountry();
+    this.game.currentQuestion += 1;
+
+    // End of game if no more questions otherwise game is paused
+    if (this.game.currentQuestion > this.game.totalQuestion) {
+      this.game.isRunning = false;
     } else {
-      console.log('you lose');
+      this.game.isPaused = true;
     }
   }
 
+  /**
+   * Pick a random country and delete it from the list
+   */
   private pickRandomCountry(): string {
-    return this.countryNameList[Math.floor(Math.random() * this.countryNameList.length)];
+    const rdmCountry = this.countryNameList[Math.floor(Math.random() * this.countryNameList.length)];
+
+    const index = this.countryNameList.indexOf(rdmCountry, 0);
+    if (index > -1) {
+      this.countryNameList.splice(index, 1);
+    }
+
+    return rdmCountry;
   }
 }
