@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.0.1](https://github.com/super-maps-pointer/frontend/tree/v2.0.1) - 2018-10-05
+### Changed
+ - [\#21](https://github.com/super-maps-pointer/frontend/pull/22) Fix regression in package.json
+
 ## [2.0.0](https://github.com/super-maps-pointer/frontend/tree/v2.0.0) - 2018-10-05
 ### Added
  - [\#3](https://github.com/super-maps-pointer/frontend/commit/40590eb6f05206f2f4c502a95b041d3386293e98) Setup integration tests 
